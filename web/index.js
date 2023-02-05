@@ -8,6 +8,9 @@ import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 
+import fetchProducts from "./helpers/fetch-products.js";
+
+// @ts-ignore
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
 const STATIC_PATH =
@@ -26,6 +29,7 @@ app.get(
 );
 app.post(
   shopify.config.webhooks.path,
+  // @ts-ignore
   shopify.processWebhooks({ webhookHandlers: GDPRWebhookHandlers })
 );
 
@@ -54,6 +58,36 @@ app.get("/api/products/create", async (_req, res) => {
   }
   res.status(status).send({ success: status === 200, error });
 });
+
+
+app.get("/api/products", async (_req, res) => {
+  try {
+    const response = await shopify.api.rest.Product.all({
+      session: res.locals.shopify.session,
+    });
+    res.status(200).send(response);
+  }
+   catch(err) {
+    res.status(500).send(err);
+  }
+});
+
+
+// app.get("/api/products", async (_req, res) => {
+//   let status = 200;
+//   let error = null;
+
+//   try {
+//     await fetchProducts(res.locals.shopify.session);
+//   } catch (e) {
+//     console.log(`Failed to process products: ${e.message}`);
+//     status = 500;
+//     error = e.message;
+//   }
+//   res.status(status).send({ success: status === 200, error });
+// });
+
+
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

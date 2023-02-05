@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Heading,
@@ -14,6 +14,8 @@ export function ProductsCard() {
   const [isLoading, setIsLoading] = useState(true);
   const [toastProps, setToastProps] = useState(emptyToastProps);
   const fetch = useAuthenticatedFetch();
+
+  const [dataa, setDataa] = useState('');
 
   const {
     data,
@@ -49,9 +51,31 @@ export function ProductsCard() {
     }
   };
 
+
+  //create async function to fetch products
+  const fetchProducts = async () => {
+    const response = await fetch("/api/products");
+    const dataa = await response.json();
+    setDataa(dataa);
+  };
+
+
+  //call fetchProducts function
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  console.log(dataa);
+
   return (
     <>
       {toastMarkup}
+      {dataa.map((product) => (
+        <div key={product.id}>
+          <h3>{product.title}</h3>
+          <p>{product.description}</p>
+        </div>
+      ))}
       <Card
         title="Product Counter"
         sectioned
@@ -62,10 +86,6 @@ export function ProductsCard() {
         }}
       >
         <TextContainer spacing="loose">
-          <p>
-            Sample products are created with a default title and price. You can
-            remove them at any time.
-          </p>
           <Heading element="h4">
             TOTAL PRODUCTS
             <DisplayText size="medium">
