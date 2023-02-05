@@ -7,10 +7,11 @@ const Header = ({ setListImages, setIsLoading }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       setIsLoading(true);
-      const response = await fetch("https://genieart-api-production.up.railway.app/openai/images", {
+      const response = await fetch("https://aimage-api-production.up.railway.app/openai/images", {
+      // const response = await fetch("http://localhost:5500/openai/images", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -20,6 +21,7 @@ const Header = ({ setListImages, setIsLoading }) => {
         })
       })
       const jsonData = await response.json();
+      console.log(jsonData);
       setListImages(jsonData.data)
 
     } catch (error) {
