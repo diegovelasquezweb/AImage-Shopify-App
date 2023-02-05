@@ -15,5 +15,9 @@
     "@shopify/app": "3.39.0",
     "@shopify/cli": "3.39.0"
   },
-  "author": "diegovelasquez"
+  "author": "diegovelasquez",
+  "devDependencies": {
+    "@shopify/prettier-plugin-liquid": "^1.0.6",
+    "prettier": "^2.8.3"
+  }
 }
