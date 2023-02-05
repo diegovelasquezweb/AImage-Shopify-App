@@ -9,7 +9,6 @@ import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 
 import fetchProducts from "./helpers/fetch-products.js";
-import generateImage from "./helpers/openai.js";
 
 // @ts-ignore
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
