@@ -1,15 +1,12 @@
 import ImageCard from "./ImageCard";
 import Skeleton from "./Skeleton"
-import { useEffect } from "react";
 
 const ImageResults = ({ listImages, isLoading}) => {
-  useEffect(() => {
-    console.log(listImages)
-  }, [listImages])
+
   return (
-    <div className="">
-      <div className="">
-        {listImages.map((image, index) => <ImageCard image={image.url} key={index} />)}
+    <div className="container max-w-5xl mx-auto px-2 py-6">
+      <div className="grid md:grid-cols-2 gap-4">
+        {isLoading ? <Skeleton item={10} /> : listImages.map((image, index) => <ImageCard image={image.url} key={index} />)}
       </div>
     </div>
   )

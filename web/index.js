@@ -73,40 +73,6 @@ app.get("/api/products", async (_req, res) => {
   }
 });
 
-app.get("/api/products/update", async (_req, res) => {
-  let status = 200;
-  let error = null;
-  let myTest = "data test"
-
-  console.log(res, "res");
-
-  try {
-    // await generateImage(res.locals.shopify.session);
-  } catch (e) {
-    console.log(`Failed to process products/update: ${e.message}`);
-    status = 500;
-    error = e.message;
-  }
-  res.status(status).send({ success: status === 200, error, myTest });
-});
-
-// app.get("/apps/auto-image/openai", async (_req, res) => {
-//   let status = 200;
-//   let error = null;
-
-//   try {
-//     await generateImage(res.locals.shopify.session);
-//   } catch (e) {
-//     console.log(`Failed to process products/create: ${e.message}`);
-//     status = 500;
-//     error = e.message;
-//   }
-//   res.status(status).send({ success: status === 200, error });
-// });
-
-app.use(express.urlencoded({ extended: true }))
-
-
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
 app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
