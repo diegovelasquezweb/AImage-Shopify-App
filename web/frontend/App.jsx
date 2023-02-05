@@ -24,6 +24,10 @@ export default function App() {
                   label: "Page name",
                   destination: "/pagename",
                 },
+                {
+                  label: "Open AI",
+                  destination: "/openai",
+                },
               ]}
             />
             <Routes pages={pages} />

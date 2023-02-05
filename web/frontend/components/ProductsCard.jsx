@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Card,
   Heading,
@@ -15,7 +15,7 @@ export function ProductsCard() {
   const [toastProps, setToastProps] = useState(emptyToastProps);
   const fetch = useAuthenticatedFetch();
 
-  const [dataa, setDataa] = useState('');
+  const [dataa, setDataa] = useState([]);
 
   const {
     data,
@@ -59,23 +59,24 @@ export function ProductsCard() {
     setDataa(dataa);
   };
 
+  const dataaMarkup = dataa.map((item, index) => {
+    return (
+      <div key={index}>
+        <h1>{item.title}</h1>
+      </div>
+    );
+  });
 
   //call fetchProducts function
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  console.log(dataa);
 
   return (
     <>
       {toastMarkup}
-      {dataa.map((product) => (
-        <div key={product.id}>
-          <h3>{product.title}</h3>
-          <p>{product.description}</p>
-        </div>
-      ))}
+      {dataaMarkup}
       <Card
         title="Product Counter"
         sectioned

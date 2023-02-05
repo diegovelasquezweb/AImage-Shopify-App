@@ -9,6 +9,7 @@ import productCreator from "./product-creator.js";
 import GDPRWebhookHandlers from "./gdpr.js";
 
 import fetchProducts from "./helpers/fetch-products.js";
+import generateImage from "./helpers/openai.js";
 
 // @ts-ignore
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -72,21 +73,38 @@ app.get("/api/products", async (_req, res) => {
   }
 });
 
+app.get("/api/products/update", async (_req, res) => {
+  let status = 200;
+  let error = null;
+  let myTest = "data test"
 
-// app.get("/api/products", async (_req, res) => {
+  console.log(res, "res");
+
+  try {
+    // await generateImage(res.locals.shopify.session);
+  } catch (e) {
+    console.log(`Failed to process products/update: ${e.message}`);
+    status = 500;
+    error = e.message;
+  }
+  res.status(status).send({ success: status === 200, error, myTest });
+});
+
+// app.get("/apps/auto-image/openai", async (_req, res) => {
 //   let status = 200;
 //   let error = null;
 
 //   try {
-//     await fetchProducts(res.locals.shopify.session);
+//     await generateImage(res.locals.shopify.session);
 //   } catch (e) {
-//     console.log(`Failed to process products: ${e.message}`);
+//     console.log(`Failed to process products/create: ${e.message}`);
 //     status = 500;
 //     error = e.message;
 //   }
 //   res.status(status).send({ success: status === 200, error });
 // });
 
+app.use(express.urlencoded({ extended: true }))
 
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
