@@ -1,23 +1,56 @@
 import {
-  Card,
-  Page,
-  Layout,
+  Card, Page, Layout,
   TextContainer,
   Image,
   Stack,
   Link,
-  Heading,
+  Text,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
-
 import { trophyImage } from "../assets";
+import { useEffect, useState } from "react";
+import { useAuthenticatedFetch } from "../hooks";
 
-import { ProductsCard } from "../components";
 
 export default function HomePage() {
+  const [data, setData] = useState([]);
+  const fetch = useAuthenticatedFetch();
+
+  // create async function to fetch products
+  const fetchProducts = async () => {
+    const response = await fetch("/api/products");
+    const data = await response.json();
+    setData(data);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+
+  const dataMarkup = data.map((item, index) => {
+    return (
+      <div key={index}>
+        <h1>{item.title}</h1>
+      </div>
+    );
+  });
+
   return (
-    <Page narrowWidth>
-      <TitleBar title="App name" primaryAction={null} />
+    <Page>
+      <TitleBar
+        title="AImage generator"
+        primaryAction={{
+          content: "Settings",
+          onAction: () => console.log("Primary action"),
+        }}
+        secondaryActions={[
+          {
+            content: "Support",
+            onAction: () => console.log("Secondary action"),
+          },
+        ]}
+      />
       <Layout>
         <Layout.Section>
           <Card sectioned>
@@ -29,39 +62,28 @@ export default function HomePage() {
             >
               <Stack.Item fill>
                 <TextContainer spacing="loose">
-                  <Heading>Nice work on building a Shopify app 🎉</Heading>
+                  <Text variant="heading4xl" as="h1">
+                    Welcome to <span style={{ color: "#ff595e" }}>AI</span>mage
+                  </Text>
                   <p>
-                    Your app is ready to explore! It contains everything you
-                    need to get started including the{" "}
-                    <Link url="https://polaris.shopify.com/" external>
-                      Polaris design system
-                    </Link>
-                    ,{" "}
-                    <Link url="https://shopify.dev/api/admin-graphql" external>
-                      Shopify Admin API
-                    </Link>
-                    , and{" "}
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, dolorum illo! Aut obcaecati fuga facilis adipisci similique voluptate deserunt natus, fugiat suscipit assumenda consequatur vel explicabo neque ipsam, blanditiis maxime?
+                  </p>
+                  <>
+                    <Link url="#" external>
+                      Help
+                    </Link> - {" "}
+                    <Link url="#" external>
+                      Support
+                    </Link> - {" "}
                     <Link
-                      url="https://shopify.dev/apps/tools/app-bridge"
+                      url="#"
                       external
                     >
-                      App Bridge
-                    </Link>{" "}
-                    UI library and components.
-                  </p>
+                      Docs
+                    </Link> - {" "}
+                  </>
                   <p>
-                    Ready to go? Start populating your app with some sample
-                    products to view and test in your store.{" "}
-                  </p>
-                  <p>
-                    Learn more about building out your app in{" "}
-                    <Link
-                      url="https://shopify.dev/apps/getting-started/add-functionality"
-                      external
-                    >
-                      this Shopify tutorial
-                    </Link>{" "}
-                    📚{" "}
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat eaque tenetur architecto soluta esse, similique quos ad voluptatum.
                   </p>
                 </TextContainer>
               </Stack.Item>
@@ -76,9 +98,14 @@ export default function HomePage() {
               </Stack.Item>
             </Stack>
           </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <ProductsCard />
+          <Card sectioned>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magnam consequuntur, id modi fuga labore vel asperiores dignissimos rem quas, odit facere recusandae non ratione blanditiis sit dolorum, corrupti alias maiores.
+            </p>
+          </Card>
+          <Card sectioned>
+            { dataMarkup }
+          </Card>
         </Layout.Section>
       </Layout>
     </Page>

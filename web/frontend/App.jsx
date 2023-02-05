@@ -21,12 +21,16 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "Page name",
-                  destination: "/pagename",
+                  label: "AImage Generator",
+                  destination: "/AImage",
                 },
                 {
-                  label: "Open AI",
-                  destination: "/openai",
+                  label: "Support",
+                  destination: "/",
+                },
+                {
+                  label: "Help",
+                  destination: "/",
                 },
               ]}
             />
