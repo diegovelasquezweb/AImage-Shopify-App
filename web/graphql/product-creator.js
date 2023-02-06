@@ -6,9 +6,7 @@ const CREATE_PRODUCTS_MUTATION = `
   mutation productCreate($input: ProductInput!) {
     productCreate(input: $input) {
       product {
-        id,
-        title,
-        bodyHtml
+        id
       }
     }
   }
@@ -16,7 +14,6 @@ const CREATE_PRODUCTS_MUTATION = `
 
 export default async function productCreator(
   session,
-  count,
   title,
   description,
   images
@@ -24,7 +21,6 @@ export default async function productCreator(
   const client = new shopify.api.clients.Graphql({ session });
 
   try {
-    for (let i = 0; i < count; i++) {
       await client.query({
         data: {
           query: CREATE_PRODUCTS_MUTATION,
@@ -39,8 +35,7 @@ export default async function productCreator(
             },
           },
         },
-      });
-    }
+      })
   } catch (error) {
     if (error instanceof GraphqlQueryError) {
       throw new Error(

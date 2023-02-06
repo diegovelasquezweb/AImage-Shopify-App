@@ -17,15 +17,8 @@ export function EditProduct({ listImages, isLoading }) {
     />
   ) : null;
 
-  // const images = listImages;
-
-  // const images = listImages.map(a => a.url)
-  // const images = Object.keys(listImages).map(val =>listImages[val]);
-  // var images2 = [];
-  // for(var item of listImages){
-  //   images2.push(item.url); 
-  // }
-  // const images = JSON.stringify(images2);
+  const imagesArray = listImages.map((image) => image.url);
+  const images = imagesArray.toString()
 
   const handleSubmit = async () => {
     const response = await fetch("/api/products/create", {
@@ -35,7 +28,8 @@ export function EditProduct({ listImages, isLoading }) {
       },
       body: JSON.stringify({
         title,
-        description
+        description,
+        images
       }),
     });
 
@@ -49,6 +43,7 @@ export function EditProduct({ listImages, isLoading }) {
   return (
     <>
       {toastMarkup}
+
       {/* { listImages.map((image, index) => <img key={index} className="" width="200" height="200" src={image.url} alt="" />) } */}
       <Form onSubmit={handleSubmit}>
         <FormLayout>
@@ -64,6 +59,7 @@ export function EditProduct({ listImages, isLoading }) {
             multiline={4}
           />
           <Button primary submit>Create Product</Button>
+          <a href={images} download target="_blank">Download image</a>
         </FormLayout>
       </Form>
 
