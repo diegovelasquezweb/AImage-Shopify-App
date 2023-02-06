@@ -3,13 +3,9 @@ import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
 import serveStatic from "serve-static";
-
 import shopify from "./shopify.js";
-
 import GDPRWebhookHandlers from "./gdpr.js";
-
-import fetchProducts from "./helpers/fetch-products.js";
-
+import productCreator from "./graphql/product-creator.js";
 
 // @ts-ignore
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -39,28 +35,8 @@ app.use("/api/*", shopify.validateAuthenticatedSession());
 
 app.use(express.json());
 
-app.get("/api/products/count", async (_req, res) => {
-  const countData = await shopify.api.rest.Product.count({
-    session: res.locals.shopify.session,
-  });
-  res.status(200).send(countData);
-});
 
-app.get("/api/products/create", async (_req, res) => {
-  let status = 200;
-  let error = null;
-
-  try {
-    await productCreator(res.locals.shopify.session);
-  } catch (e) {
-    console.log(`Failed to process products/create: ${e.message}`);
-    status = 500;
-    error = e.message;
-  }
-  res.status(status).send({ success: status === 200, error });
-});
-
-
+//get all products
 app.get("/api/products", async (_req, res) => {
   try {
     const response = await shopify.api.rest.Product.all({
@@ -68,9 +44,31 @@ app.get("/api/products", async (_req, res) => {
     });
     res.status(200).send(response);
   }
-   catch(err) {
+  catch (err) {
     res.status(500).send(err);
   }
+});
+
+//post new product
+app.post("/api/products/create", async (req, res) => {
+
+  const title = req.body.title ? req.body.title : 'Product Fail';
+  const description = req.body.description ? req.body.description : 'Product Fail';
+  const images = req.body.images ? req.body.images : null;
+  const session = res.locals.shopify.session;
+
+  // testing purpose
+  const myData = [req.body.title, req.body.description, req.body.images];
+
+
+  try {
+    await productCreator(session, title, description, images);
+  } catch (e) {
+    console.log(`Failed to process products/create: ${e.message}`);
+  }
+
+  // testing purpose
+  res.status(200).send(myData);
 });
 
 app.use(serveStatic(STATIC_PATH, { index: false }));

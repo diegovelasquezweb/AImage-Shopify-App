@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, Page, Layout } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
 import { EditProduct, CreateImages, ShowImages } from "../components";
@@ -6,6 +6,7 @@ import { EditProduct, CreateImages, ShowImages } from "../components";
 export default function PageName() {
     const [listImages, setListImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
   return (
     <Page>
       <TitleBar
@@ -26,7 +27,7 @@ export default function PageName() {
           <Card sectioned>
             <CreateImages setListImages={setListImages} setIsLoading={setIsLoading} />
             <ShowImages listImages={listImages} isLoading={isLoading} />
-            <EditProduct />
+            <EditProduct listImages={listImages} isLoading={isLoading} />
           </Card>
         </Layout.Section>
       </Layout>

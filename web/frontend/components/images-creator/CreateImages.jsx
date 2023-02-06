@@ -23,17 +23,18 @@ export const CreateImages = ({ setListImages, setIsLoading }) => {
       console.log(error)
     } finally {
       setIsLoading(false);
+
     }
   };
 
   return (
     <TextContainer spacing="loose">
-        <TextField
-          label="Create an image with a prompt"
-          value={promptValue}
-          onChange={setPromptValue}
-        />
-        <Button primary onClick={() => handleSubmit()}>Generate Image</Button>
+      <TextField
+        label="Create an image with a prompt"
+        value={promptValue}
+        onChange={setPromptValue}
+      />
+      <Button primary onClick={() => handleSubmit()}>Generate Image</Button>
     </TextContainer>
   );
 };

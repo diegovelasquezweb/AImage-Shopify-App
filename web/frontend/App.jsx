@@ -21,11 +21,11 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "AImage Generator",
+                  label: "Product Creator",
                   destination: "/AImage",
                 },
                 {
-                  label: "Support",
+                  label: "Prodcut Editor",
                   destination: "/",
                 },
                 {

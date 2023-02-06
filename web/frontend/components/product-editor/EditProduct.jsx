@@ -1,17 +1,12 @@
-import { TextField, Button, Form, FormLayout, EmptyState, DataTable } from "@shopify/polaris";
+import { TextField, Button, Form, FormLayout, EmptyState, DataTable, Card, TextContainer } from "@shopify/polaris";
 import { ResourcePicker, Toast } from "@shopify/app-bridge-react";
 import { useAuthenticatedFetch } from "../../hooks";
-import { useState, useMemo } from "react";
-// import { ShowProduct } from "../../components";
+import { useState, useMemo, useEffect } from "react";
 
-export function EditProduct() {
-
-  const [appendToTitle, setAppendToTitle] = useState('');
-  const [appendToDescription, setAppendToDescription] = useState('');
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const [products, setProducts] = useState([]);
+export function EditProduct({ listImages, isLoading }) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [showToast, setShowToast] = useState(false);
-  const [id, setId] = useState('');
   const fetch = useAuthenticatedFetch();
 
   const toastMarkup = showToast ? (
@@ -22,57 +17,52 @@ export function EditProduct() {
     />
   ) : null;
 
-  const productsTableDisplayData = useMemo(() => products.map((product) => [
-    product.id, product.title, `${product.title}${appendToTitle}`, product.descriptionHtml, `${product.descriptionHtml}${appendToDescription}`
-  ]), [products, appendToTitle, appendToDescription]);
+  const imagesArray = listImages.map((image) => image.url);
+  const images = imagesArray.toString()
 
-  // const result = Object.values(productsTableDisplayData);
+  const handleSubmit = async () => {
+    const response = await fetch("/api/products/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        images
+      }),
+    });
+
+    if (response.ok) {
+      setShowToast(true);
+    } else {
+      console.log("Error");
+    }
+  };
+
   return (
     <>
       {toastMarkup}
-      <Form>
+
+      {/* { listImages.map((image, index) => <img key={index} className="" width="200" height="200" src={image.url} alt="" />) } */}
+      <Form onSubmit={handleSubmit}>
         <FormLayout>
           <TextField
-            label="Append to title"
-            value={appendToTitle}
-            onChange={setAppendToTitle}
-            spacer="--p-space-025"
+            label="Title"
+            value={title}
+            onChange={setTitle}
           />
           <TextField
-            label="Append to description1"
-            value={appendToDescription}
-            onChange={setAppendToDescription}
+            label="Description"
+            value={description}
+            onChange={setDescription}
+            multiline={4}
           />
-          <ResourcePicker
-            resourceType="Product"
-            showVariants={false}
-            open={pickerOpen}
-            selectMultiple={false}
-            onSelection={(resources) => {
-              setProducts(resources.selection);
-              setId(resources.selection[0].id);
-              console.log(resources.selection[0], "resources");
-            }}
-          />
-          <Button primary onClick={() => setPickerOpen(true)}>Select Product</Button>
-          {/* <ShowProduct productsTableDisplayData={result} /> */}
-          
-            {productsTableDisplayData.length ?
-                <DataTable
-                    columnContentTypes={['text', 'text', 'text', 'text', 'text']}
-                    headings={['ID', 'oldTitle', 'newTitle', 'oldDesc', 'NewDesc']}
-                    rows={productsTableDisplayData}
-                /> : <EmptyState
-                    heading="No products selected"
-                    image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
-                >
-                    <p>Lorem ipsum</p>
-                </EmptyState>
-            }
-            <Button primary>Update Products</Button>
-        
+          <Button primary submit>Create Product</Button>
+          <a href={images} download target="_blank">Download image</a>
         </FormLayout>
       </Form>
+
     </>
   );
 }
