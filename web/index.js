@@ -56,16 +56,19 @@ app.post("/api/products/create", async (req, res) => {
   if (!req?.body?.title || !req?.body?.description) {
     return res.status(400).send({ 'message': 'field is required' });
   }
-  // testing purpose
-  const myData = [req.body.title, req.body.description];
 
   const title = req.body.title ? req.body.title : 'Product Fail';
   const description = req.body.description ? req.body.description : 'Product Fail';
+  const images = "https://oaidalleapiprodscus.blob.core.windows.net/private/org-EupJPjg0fDpx2YhQ3TamBB48/user-FtvhQmsdyf4FFQ74bebrvhUA/img-FgGkLs8ThpwSVtRVXrc7aIQ1.png?st=2023-02-06T02%3A59%3A55Z&se=2023-02-06T04%3A59%3A55Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-02-05T20%3A18%3A45Z&ske=2023-02-06T20%3A18%3A45Z&sks=b&skv=2021-08-06&sig=BkwtOoqqqEk7U6Ty09gFH%2BAjwCHZIt5mX16ZPwQr95g%3D";
   const count = 1;
   const session = res.locals.shopify.session;
 
+  // testing purpose
+  const myData = [req.body.title, req.body.description, images];
+
+
   try {
-    await productCreator(session, count, title, description);
+    await productCreator(session, count, title, description, images);
   } catch (e) {
     console.log(`Failed to process products/create: ${e.message}`);
   }

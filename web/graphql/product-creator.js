@@ -18,7 +18,8 @@ export default async function productCreator(
   session,
   count,
   title,
-  description
+  description,
+  images
 ) {
   const client = new shopify.api.clients.Graphql({ session });
 
@@ -30,7 +31,11 @@ export default async function productCreator(
           variables: {
             input: {
               title: title,
-              bodyHtml: description
+              bodyHtml: description,
+              images: {
+                src: images,
+                altText: title
+              }
             },
           },
         },

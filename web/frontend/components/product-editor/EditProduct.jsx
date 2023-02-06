@@ -3,16 +3,11 @@ import { ResourcePicker, Toast } from "@shopify/app-bridge-react";
 import { useAuthenticatedFetch } from "../../hooks";
 import { useState, useMemo, useEffect } from "react";
 
-export function EditProduct(listImages) {
-
+export function EditProduct({ listImages, isLoading }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const [products, setProducts] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const fetch = useAuthenticatedFetch();
-
-  console.log(listImages, "listImages");
 
   const toastMarkup = showToast ? (
     <Toast
@@ -22,12 +17,17 @@ export function EditProduct(listImages) {
     />
   ) : null;
 
-  // const productsTableDisplayData = useMemo(() => products.map((product) => [
-  //   product.id, product.title, `${product.title}${appendToTitle}`, product.descriptionHtml, `${product.descriptionHtml}${appendToDescription}`
-  // ]), [products, appendToTitle, appendToDescription]);
+  // const images = listImages;
+
+  // const images = listImages.map(a => a.url)
+  // const images = Object.keys(listImages).map(val =>listImages[val]);
+  // var images2 = [];
+  // for(var item of listImages){
+  //   images2.push(item.url); 
+  // }
+  // const images = JSON.stringify(images2);
 
   const handleSubmit = async () => {
-    console.log(title, "title")
     const response = await fetch("/api/products/create", {
       method: "POST",
       headers: {
@@ -49,7 +49,8 @@ export function EditProduct(listImages) {
   return (
     <>
       {toastMarkup}
-      <Form>
+      {/* { listImages.map((image, index) => <img key={index} className="" width="200" height="200" src={image.url} alt="" />) } */}
+      <Form onSubmit={handleSubmit}>
         <FormLayout>
           <TextField
             label="Title"
@@ -62,51 +63,10 @@ export function EditProduct(listImages) {
             onChange={setDescription}
             multiline={4}
           />
-          {/* <Button primary submit>Update Products</Button> */}
-          {/* <TextField
-            label="Append to description1"
-            value={appendToDescription}
-            onChange={setAppendToDescription}
-          />
-          <ResourcePicker
-            resourceType="Product"
-            showVariants={false}
-            open={pickerOpen}
-            selectMultiple={false}
-            onSelection={(resources) => {
-              setProducts(resources.selection);
-              setId(resources.selection[0].id);
-              // console.log(resources.selection[0], "resources");
-            }}
-          />
-          <Button primary onClick={() => setPickerOpen(true)}>Select Product</Button> */}
-          {/* <ShowProduct productsTableDisplayData={result} /> */}
-
-          {/* {productsTableDisplayData.length ?
-            <DataTable
-              columnContentTypes={['text', 'text', 'text', 'text', 'text']}
-              headings={['ID', 'oldTitle', 'newTitle', 'oldDesc', 'NewDesc']}
-              rows={productsTableDisplayData}
-            /> : <EmptyState
-              heading="No products selected"
-              image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
-            >
-              <p>Lorem ipsum</p>
-            </EmptyState>
-          } */}
-
-
+          <Button primary submit>Create Product</Button>
         </FormLayout>
       </Form>
-      <Card
-        sectioned
-        spacing="loose"
-        primaryFooterAction={{
-          content: "Create Product",
-          onAction: handleSubmit,
-        }}
-      >
-      </Card>
+
     </>
   );
 }
