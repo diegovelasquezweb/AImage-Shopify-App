@@ -25,8 +25,8 @@ export default function App() {
                   destination: "/AImage",
                 },
                 {
-                  label: "Support",
-                  destination: "/",
+                  label: "Test",
+                  destination: "/test",
                 },
                 {
                   label: "Help",
