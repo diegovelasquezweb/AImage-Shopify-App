@@ -26,7 +26,7 @@ export default function PageName() {
           <Card sectioned>
             <CreateImages setListImages={setListImages} setIsLoading={setIsLoading} />
             <ShowImages listImages={listImages} isLoading={isLoading} />
-            <EditProduct />
+            <EditProduct listImages={listImages} />
           </Card>
         </Layout.Section>
       </Layout>

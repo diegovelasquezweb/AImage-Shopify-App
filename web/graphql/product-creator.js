@@ -1,5 +1,5 @@
 import { GraphqlQueryError } from "@shopify/shopify-api";
-import shopify from "./shopify.js";
+import shopify from "../shopify.js";
 
 
 const CREATE_PRODUCTS_MUTATION = `
@@ -7,7 +7,8 @@ const CREATE_PRODUCTS_MUTATION = `
     productCreate(input: $input) {
       product {
         id,
-        title
+        title,
+        bodyHtml
       }
     }
   }
@@ -16,7 +17,8 @@ const CREATE_PRODUCTS_MUTATION = `
 export default async function productCreator(
   session,
   count,
-  title
+  title,
+  description
 ) {
   const client = new shopify.api.clients.Graphql({ session });
 
@@ -28,6 +30,7 @@ export default async function productCreator(
           variables: {
             input: {
               title: title,
+              bodyHtml: description
             },
           },
         },

@@ -3,15 +3,16 @@ import { ResourcePicker, Toast } from "@shopify/app-bridge-react";
 import { useAuthenticatedFetch } from "../../hooks";
 import { useState, useMemo, useEffect } from "react";
 
-export function EditProduct() {
+export function EditProduct(listImages) {
 
   const [title, setTitle] = useState('');
-  const [appendToDescription, setAppendToDescription] = useState('');
+  const [description, setDescription] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [showToast, setShowToast] = useState(false);
-  const [id, setId] = useState('');
   const fetch = useAuthenticatedFetch();
+
+  console.log(listImages, "listImages");
 
   const toastMarkup = showToast ? (
     <Toast
@@ -25,23 +26,7 @@ export function EditProduct() {
   //   product.id, product.title, `${product.title}${appendToTitle}`, product.descriptionHtml, `${product.descriptionHtml}${appendToDescription}`
   // ]), [products, appendToTitle, appendToDescription]);
 
-  // useEffect(() => {
-  //   console.log(title, "title");
-  // }, [title]);
-
-
-  // string to json
-  // const title = JSON.parse(appendToTitle);
-  // console.log(title, "title");
-
-  // const handleUpdate = async () => {
-  //   await fetch("/api/products/create", {
-  //     title: JSON.stringify(appendToTitle),
-  //   })
-  // };
-
-
-  const handlePopulate = async () => {
+  const handleSubmit = async () => {
     console.log(title, "title")
     const response = await fetch("/api/products/create", {
       method: "POST",
@@ -49,42 +34,33 @@ export function EditProduct() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title
+        title,
+        description
       }),
     });
 
     if (response.ok) {
-      console.log("Success");
-      console.log(response, "response");
+      setShowToast(true);
     } else {
       console.log("Error");
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch("/api/products");
-  //     try {
-  //       const data = await response.json();
-  //       console.log(data);
-  //     }
-  //     catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
   return (
     <>
       {toastMarkup}
-      <></>
       <Form>
         <FormLayout>
           <TextField
-            label="Append to title"
+            label="Title"
             value={title}
             onChange={setTitle}
+          />
+          <TextField
+            label="Description"
+            value={description}
+            onChange={setDescription}
+            multiline={4}
           />
           {/* <Button primary submit>Update Products</Button> */}
           {/* <TextField
@@ -123,19 +99,13 @@ export function EditProduct() {
         </FormLayout>
       </Form>
       <Card
-        title="Product add"
         sectioned
+        spacing="loose"
         primaryFooterAction={{
-          content: "Dios",
-          onAction: handlePopulate,
+          content: "Create Product",
+          onAction: handleSubmit,
         }}
       >
-        <TextContainer spacing="loose">
-          <p>
-            Sample products are created with a default title and price. You can
-            remove them at any time.
-          </p>
-        </TextContainer>
       </Card>
     </>
   );
